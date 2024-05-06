@@ -10,14 +10,19 @@ from datetime import date
 createLoadAnswer = input("Create or Load a ToDo list: [C/L]").lower()
 
 
-def listOptions():
-    input("Would you like to: ")
+def menu():
+    return input("""Would you like to: 
+                \nRead Tasks --------------> [R]
+                \nAdd Tasks ---------------> [A]
+                \nDelete a Task -----------> [D]
+                \nDelete the Task List ----> [DD]
+                \nAlter a tasks priority --> [P]
+                \nQuit --------------------> [Q]""")
 
 
 def addTaskToFile(file,date,time,priority,task):
     print(0)
     
-
 def createTasks(file):
     answer = "y"
     while answer != "n":
@@ -40,7 +45,6 @@ if createLoadAnswer == "c":
         createTasks(filemanip)
 else:
     print(0)
-    # Find out what the user wants to do?
     # read a file (must make sure file exists)
     # write a file ()
     # remove items
