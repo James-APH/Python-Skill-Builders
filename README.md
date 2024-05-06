@@ -14,19 +14,20 @@ I will tag the projecy
 
 ## Project List:
 
+- Hello World
+
 - Calculator
 
-- Automation Scripts
+- To-Do List
 
-- GUI Application
+- Number Gussing Game
 
-- Data Visualization
+- Currency Converter
 
-- Table Extraction (CSVs)
+- Chatbot
 
-- Table Extraction (PDFs)
+- Word Counter
 
-- Desktop Cleaner
+- Alarm Clock
 
-- Web Scraping
- 
+- BMI Calculator
