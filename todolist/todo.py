@@ -31,8 +31,6 @@ class ToDo:
     self.time = time
     self.priority = priority
 
-  def setTaskNumber(self)
-
 
 
 
@@ -68,6 +66,7 @@ class ToDoList:
         while taskToDelete < 0 or taskToDelete >= len(self.todos):
           taskToDelete = int(input("Enter a valid task to delete: "))
         self.todos.pop(taskToDelete-1)
+        self.__re_Order_Task_Number()
 
     def editTask(self):
       if not self.todos:
@@ -94,7 +93,19 @@ class ToDoList:
         self.todos.append(copy.copy(todo))
         answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
         i += 1
+      self.__re_Order_Task_Priority()
+      self.__re_Order_Task_Number()
 
+    # to run on delete and after rotp
+    def __re_Order_Task_Number(self):
+      i = int(1)
+      for x in self.todos:
+        x.taskNumber = i
+        i+=1
+
+    # to run after edit
+    def __re_Order_Task_Priority(self):
+      print("0")
 
 
 
