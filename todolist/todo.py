@@ -1,8 +1,8 @@
 # Author: James Huston
 # Email:  jamzhuston@gmail.com
 # Description:
-# 
-# 
+#
+#
 
 # Tasks:
 # write a todo list in a list of tuples
@@ -15,7 +15,7 @@
 # add extension to todos
 # add ui
 # add stages (todo, doing, done)
-     
+
 
 from datetime import date
 import copy
@@ -24,32 +24,39 @@ import copy
 # on quit ask the user if they would like to save their todolist
 
 class ToDo:
-    taskNumber = 0
-    todaysDate = date.today()
-    task = "no task"
-    time = 0
-    priority = 0
+  def __init__(self, taskNumber, task, time, priority) -> None:
+    self.taskNumber = taskNumber
+    self.todaysDate = date.today()
+    self.task = task
+    self.time = time
+    self.priority = priority
+
+
 
 
 
 class ToDoList:
-    def __init__(self, todos, saveFile) -> None:
+    def __init__(self, saveFile) -> None:
         self.todos = []
         self.saveFile = ""
 
     def loadTasks():
         print("this function will load the tasks to a list from a file")
 
-    def readTasks():
-        print("This function will read the tasks from the task list")
+    def readTasks(self):
+        for x in self.todos:
+            print("#: Task: Priority: Time To Complete: Date Started:")
+            print(f"{x.taskNumber}. | {x.task} | {x.priority} | {x.time} | {x.todaysDate}")
 
     def saveTasks(self):
         if not self.todos:
             print("Nothing to save")
         else:
+            print("Saving tasks")
             f = open("%s.csv" %self.saveFile, 'x')
             for x in self.todos:
                 f.write(f'{x.todaysDate},{x.task},{x.priority},{x.time}')
+
 
     def deleteTask():
         print("This function will delete a task from the list")
@@ -57,10 +64,22 @@ class ToDoList:
     def editTask():
         print("This function will edit a tasks attributes")
 
-    def addTasksP():
-        print("This function will add tasks to the list")
-
-
+    def addTasks(self):
+      i = 1
+      answer = input("Would you like to add some tasks? [Y/N]").lower()
+      while answer != "n":
+        taskNumber = i
+        task = input("What is the task: ").lower()
+        todaysDate = date.today()
+        time = input("How long should this take you? ")
+        priority = input("How Important is this task?"
+                              "\nNice To Have --> [1]"
+                              "\nImportant    --> [2]"
+                              "\nCrucial      --> [3]")
+        todo = ToDo(taskNumber, task, time, priority)
+        self.todos.append(copy.copy(todo))
+        answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
+        i += 1
 
 
 
@@ -75,7 +94,7 @@ class ToDoList:
 
 
 def menu():
-    return input("Would you like to:" 
+    return input("Would you like to:"
                 "\nRead Tasks --------------> [R]"
                 "\nAdd Tasks ---------------> [A]"
                 "\nDelete a Task -----------> [D]"
@@ -85,31 +104,20 @@ def menu():
                 "\nQuit --------------------> [Q]").lower()
 
 
-def createTasks():
-    answer = "y"
-    todo = ToDo()
-    todoList = ToDoList()
-    i = int(1)
-    while answer != "n":
-        todo.taskNumber = i
-        todo.task = input("What is the task: ").lower()
-        todo.todaysDate = date.today()
-        todo.time = input("How long should this take you? ")
-        todo.priority = input("How Important is this task?"
-                              "\nNice To Have --> [1]"
-                              "\nImportant    --> [2]"
-                              "\nCrucial      --> [3]")
-        todoList.list.append(copy.copy(todo))
-        answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
-        i += 1
-    return todoList
+def createToDoList():
+  fileName = input("What would you like to call this todo list? ")
+  todoList = ToDoList(fileName)
+  todoList.addTasks()
+  return todoList
+
+
 
 createLoadAnswer = input("Create or Load a ToDo list: [C/L]").lower()
 
 if createLoadAnswer == "c":
     addTasksAnswer = input("Would you like to add tasks [Y/N]").lower()
     if addTasksAnswer == "y":
-        todoList = createTasks()
+       # todoList = createTasks()
         choice = menu();
         while choice != "q":
             match choice:
@@ -130,8 +138,7 @@ if createLoadAnswer == "c":
 
 
             choice = menu();
-            
+
 
 else:
     print(0)
-    
