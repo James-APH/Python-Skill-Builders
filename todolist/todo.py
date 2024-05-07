@@ -24,6 +24,7 @@ import copy
 # on quit ask the user if they would like to save their todolist
 
 class ToDo:
+    taskNumber = 0
     todaysDate = date.today()
     task = "no task"
     time = 0
@@ -31,6 +32,33 @@ class ToDo:
 
 
 
+class ToDoList:
+    def __init__(self, todos, saveFile) -> None:
+        self.todos = []
+        self.saveFile = ""
+
+    def loadTasks():
+        print("this function will load the tasks to a list from a file")
+
+    def readTasks():
+        print("This function will read the tasks from the task list")
+
+    def saveTasks(self):
+        if not self.todos:
+            print("Nothing to save")
+        else:
+            f = open("%s.csv" %self.saveFile, 'x')
+            for x in self.todos:
+                f.write(f'{x.todaysDate},{x.task},{x.priority},{x.time}')
+
+    def deleteTask():
+        print("This function will delete a task from the list")
+
+    def editTask():
+        print("This function will edit a tasks attributes")
+
+    def addTasksP():
+        print("This function will add tasks to the list")
 
 
 
@@ -38,40 +66,42 @@ class ToDo:
 
 
 
-def saveToDoList(todoList):
-    name = input("What would you like to name your ToDo list: ")
-    f = open("%s.csv" %name, 'x')
-    for x in todoList:
-        f.write(f'{x.todaysDate},{x.task},{x.priority},{x.time}')
+
+
+
 
 
 
 
 
 def menu():
-    return input("""Would you like to: 
-                \nRead Tasks --------------> [R]
-                \nAdd Tasks ---------------> [A]
-                \nDelete a Task -----------> [D]
-                \nDelete the Task List ----> [DD]
-                \nAlter a tasks priority --> [P]
-                \nQuit --------------------> [Q]""")
+    return input("Would you like to:" 
+                "\nRead Tasks --------------> [R]"
+                "\nAdd Tasks ---------------> [A]"
+                "\nDelete a Task -----------> [D]"
+                "\nDelete the Task List ----> [DD]"
+                "\nAlter a tasks priority --> [P]"
+                "\nSave Tasks --------------> [S]"
+                "\nQuit --------------------> [Q]").lower()
 
 
 def createTasks():
     answer = "y"
     todo = ToDo()
-    todoList = []
+    todoList = ToDoList()
+    i = int(1)
     while answer != "n":
+        todo.taskNumber = i
         todo.task = input("What is the task: ").lower()
         todo.todaysDate = date.today()
         todo.time = input("How long should this take you? ")
-        todo.priority = input("""How Important is this task?\n
-                            Nice To Have --> [1]\n
-                            Important    --> [2]\n
-                            Crucial      --> [3]""")
-        todoList.append(copy.copy(todo))
+        todo.priority = input("How Important is this task?"
+                              "\nNice To Have --> [1]"
+                              "\nImportant    --> [2]"
+                              "\nCrucial      --> [3]")
+        todoList.list.append(copy.copy(todo))
         answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
+        i += 1
     return todoList
 
 createLoadAnswer = input("Create or Load a ToDo list: [C/L]").lower()
@@ -79,7 +109,29 @@ createLoadAnswer = input("Create or Load a ToDo list: [C/L]").lower()
 if createLoadAnswer == "c":
     addTasksAnswer = input("Would you like to add tasks [Y/N]").lower()
     if addTasksAnswer == "y":
-        createTasks()
+        todoList = createTasks()
+        choice = menu();
+        while choice != "q":
+            match choice:
+                case "r":
+
+                case "a":
+
+                case "d":
+
+                case "dd":
+
+                case "p":
+
+                case "s":
+                    saveToDoList(todoList)
+                case "q":
+
+
+
+            choice = menu();
+            
+
 else:
     print(0)
     
