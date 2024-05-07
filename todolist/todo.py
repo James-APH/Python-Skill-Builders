@@ -31,6 +31,8 @@ class ToDo:
     self.time = time
     self.priority = priority
 
+  def setTaskNumber(self)
+
 
 
 
@@ -44,9 +46,9 @@ class ToDoList:
         print("this function will load the tasks to a list from a file")
 
     def readTasks(self):
-        for x in self.todos:
-            print("#: Task: Priority: Time To Complete: Date Started:")
-            print(f"{x.taskNumber}. | {x.task} | {x.priority} | {x.time} | {x.todaysDate}")
+      for x in self.todos:
+        print("#:                 Task:      Priority:      Time To Complete:     Date Started:")
+        print(f"{x.taskNumber}. | {x.task} | {x.priority} | {x.time} | {x.todaysDate}")
 
     def saveTasks(self):
         if not self.todos:
@@ -55,14 +57,26 @@ class ToDoList:
             print("Saving tasks")
             f = open("%s.csv" %self.saveFile, 'x')
             for x in self.todos:
-                f.write(f'{x.todaysDate},{x.task},{x.priority},{x.time}')
+                f.write(f'{x.taskNumber},{x.task},{x.priority},{x.time},{x.todaysDate}')
 
+    def deleteTask(self):
+      if not self.todos:
+        print("ToDoList is empty")
+        return
+      taskToDelete = int(input("Enter the number of the task you would like to delete: "))
+      if taskToDelete < 0 or taskToDelete > len(self.todos):
+        while taskToDelete < 0 or taskToDelete >= len(self.todos):
+          taskToDelete = int(input("Enter a valid task to delete: "))
+        self.todos.pop(taskToDelete-1)
 
-    def deleteTask():
-        print("This function will delete a task from the list")
-
-    def editTask():
-        print("This function will edit a tasks attributes")
+    def editTask(self):
+      if not self.todos:
+        print("ToDoList is empty")
+        return
+      taskToEdit = int(input("Enter the number of the task you would like to edit: "))
+      if taskToEdit < 0 or taskToEdit > len(self.todos)
+        while taskToEdit < 0 or taskToEdit > len(self.todos):
+          taskToDelete = int(input("Enter a valid task to edit: "))
 
     def addTasks(self):
       i = 1
@@ -80,6 +94,9 @@ class ToDoList:
         self.todos.append(copy.copy(todo))
         answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
         i += 1
+
+
+
 
 
 
