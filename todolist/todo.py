@@ -18,6 +18,7 @@
 
 from datetime import date
 import copy
+import os
 # create a todo list with a list and a tuple
 # print the rules
 # on quit ask the user if they would like to save their todolist
@@ -35,13 +36,31 @@ class ToDoList:
     # constructor for todolist
     #
     def __init__(self, saveFile) -> None:
+        self.directory = "todos"
         self.todos = []
         self.saveFile = ""
+    #
+    # function to check if a file exists
+    #
+    def checkToDoExists(self, fileName):
+      path = f'todos/{fileName}.csv'
+      return os.path.isfile(path)
     #
     # function to load tasks from a file
     #
     def loadTasks(self):
-        print("this function will load the tasks to a list from a file")
+      if len(os.listdir(f'{self.directory}/')) == 0:
+        print("No Fils exist")
+        return
+      fileName = ""
+      while not self.checkToDoExists(fileName):
+        fileName = str(input("What is the name of the todolist that you would like to load? "))
+      file = open(f'{self.directory}/{fileName}.csv')
+      data = file.readlines()
+      for x in data:
+        stringAsList = x.split(',')
+        self.todos.append(copy.copy(ToDo(stringAsList[0], stringAsList[1], stringAsList[2], stringAsList[3])))
+
     #
     # function to read out the todo list
     #
@@ -105,8 +124,8 @@ class ToDoList:
         time = input("How long should this take you? ")
         priority = input("How Important is this task?"
                               "\nNice To Have --> [1]"
-                              "\nImportant    --> [2]"
-                              "\nCrucial      --> [3]")
+                              "\nImportant -----> [2]"
+                              "\nCrucial -------> [3]")
         todo = ToDo(taskNumber, task, time, priority)
         self.todos.append(copy.copy(todo))
         answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
@@ -158,21 +177,19 @@ if createLoadAnswer == "c":
   todoList = createToDoList()
 else
   todoList = loadToDoList()
+choice = menu()
+while choice != "q":
+  match choice:
+    case "a":
+      todoList.addTasks()
+    case "r":
+      todoList.addTasks()
+    case "s":
+      todoList.saveTasks()
+    case "e":
+      todoList.editTasks()
+    case "d":
+      todoList.deleteTasks()
+    case _:
+      print("Not a command")
   choice = menu()
-  while choice != "q":
-    match choice:
-      case "a":
-        todoList.addTasks()
-      case "r":
-        todoList.addTasks()
-      case "s":
-        todoList.saveTasks()
-      case "e":
-        todoList.editTasks()
-      case "d":
-        todoList.deleteTasks()
-      case "q":
-        break
-      case _:
-        print("Not a command")
-    choice = menu()
