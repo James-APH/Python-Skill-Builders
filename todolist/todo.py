@@ -13,7 +13,6 @@
 # add items
 # change priority
 # add extension to todos
-# add ui
 # add stages (todo, doing, done)
 
 
@@ -31,16 +30,12 @@ class ToDo:
     self.time = time
     self.priority = priority
 
-
-
-
-
 class ToDoList:
     def __init__(self, saveFile) -> None:
         self.todos = []
         self.saveFile = ""
 
-    def loadTasks():
+    def loadTasks(self):
         print("this function will load the tasks to a list from a file")
 
     def readTasks(self):
@@ -53,11 +48,19 @@ class ToDoList:
             print("Nothing to save")
         else:
             print("Saving tasks")
-            f = open("%s.csv" %self.saveFile, 'x')
+            f = open("%s.csv" %self.saveFile, 'r+')
+            data = f.readlines()
+            i = int(0)
             for x in self.todos:
-                f.write(f'{x.taskNumber},{x.task},{x.priority},{x.time},{x.todaysDate}')
+              str = f'{x.taskNumber},{x.task},{x.priority},{x.time},{x.todaysDate}'
+              if str == data[i]:
+                continue
+              data[i] = str
+              i += 1
+            f.writelines(data)
+            f.close()
 
-    def deleteTask(self):
+    def deleteTasks(self):
       if not self.todos:
         print("ToDoList is empty")
         return
@@ -68,7 +71,7 @@ class ToDoList:
         self.todos.pop(taskToDelete-1)
         self.__re_Order_Task_Number()
 
-    def editTask(self):
+    def editTasks(self):
       if not self.todos:
         print("ToDoList is empty")
         return
@@ -93,7 +96,6 @@ class ToDoList:
         self.todos.append(copy.copy(todo))
         answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
         i += 1
-      self.__re_Order_Task_Priority()
       self.__re_Order_Task_Number()
 
     # to run on delete and after rotp
@@ -103,32 +105,14 @@ class ToDoList:
         x.taskNumber = i
         i+=1
 
-    # to run after edit
-    def __re_Order_Task_Priority(self):
-      print("0")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def menu():
     return input("Would you like to:"
-                "\nRead Tasks --------------> [R]"
                 "\nAdd Tasks ---------------> [A]"
-                "\nDelete a Task -----------> [D]"
-                "\nDelete the Task List ----> [DD]"
-                "\nAlter a tasks priority --> [P]"
+                "\nRead Tasks --------------> [R]"
                 "\nSave Tasks --------------> [S]"
+                "\nEdit tasks --------------> [E]"
+                "\nDelete Tasks ------------> [D]"
                 "\nQuit --------------------> [Q]").lower()
 
 
@@ -138,35 +122,37 @@ def createToDoList():
   todoList.addTasks()
   return todoList
 
+def loadToDoList():
+  fileName = input("What is the name of the ToDo list you would like to load? ")
+  todoList = ToDoList(fileName)
+  todoList.loadTasks()
+  return todoList
+
 
 
 createLoadAnswer = input("Create or Load a ToDo list: [C/L]").lower()
 
+
+
 if createLoadAnswer == "c":
-    addTasksAnswer = input("Would you like to add tasks [Y/N]").lower()
-    if addTasksAnswer == "y":
-       # todoList = createTasks()
-        choice = menu();
-        while choice != "q":
-            match choice:
-                case "r":
-
-                case "a":
-
-                case "d":
-
-                case "dd":
-
-                case "p":
-
-                case "s":
-                    saveToDoList(todoList)
-                case "q":
-
-
-
-            choice = menu();
-
-
-else:
-    print(0)
+  todoList = createToDoList()
+else
+  todoList = loadToDoList()
+  choice = menu()
+  while choice != "q":
+    match choice:
+      case "a":
+        todoList.addTasks()
+      case "r":
+        todoList.addTasks()
+      case "s":
+        todoList.saveTasks()
+      case "e":
+        todoList.editTasks()
+      case "d":
+        todoList.deleteTasks()
+      case "q":
+        break
+      case _:
+        print("Not a command")
+    choice = menu()
