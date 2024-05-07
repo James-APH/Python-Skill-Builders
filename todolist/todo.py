@@ -31,18 +31,27 @@ class ToDo:
     self.priority = priority
 
 class ToDoList:
+    #
+    # constructor for todolist
+    #
     def __init__(self, saveFile) -> None:
         self.todos = []
         self.saveFile = ""
-
+    #
+    # function to load tasks from a file
+    #
     def loadTasks(self):
         print("this function will load the tasks to a list from a file")
-
+    #
+    # function to read out the todo list
+    #
     def readTasks(self):
       for x in self.todos:
         print("#:                 Task:      Priority:      Time To Complete:     Date Started:")
         print(f"{x.taskNumber}. | {x.task} | {x.priority} | {x.time} | {x.todaysDate}")
-
+    #
+    # function to save tasks in the todo list
+    #
     def saveTasks(self):
         if not self.todos:
             print("Nothing to save")
@@ -59,7 +68,9 @@ class ToDoList:
               i += 1
             f.writelines(data)
             f.close()
-
+    #
+    # function to delete tasks from the todo list
+    #
     def deleteTasks(self):
       if not self.todos:
         print("ToDoList is empty")
@@ -70,7 +81,9 @@ class ToDoList:
           taskToDelete = int(input("Enter a valid task to delete: "))
         self.todos.pop(taskToDelete-1)
         self.__re_Order_Task_Number()
-
+    #
+    # function to edit tasks in the todo list
+    #
     def editTasks(self):
       if not self.todos:
         print("ToDoList is empty")
@@ -79,7 +92,9 @@ class ToDoList:
       if taskToEdit < 0 or taskToEdit > len(self.todos)
         while taskToEdit < 0 or taskToEdit > len(self.todos):
           taskToDelete = int(input("Enter a valid task to edit: "))
-
+    #
+    # function to add tasks to the todo list
+    #
     def addTasks(self):
       i = 1
       answer = input("Would you like to add some tasks? [Y/N]").lower()
@@ -97,15 +112,17 @@ class ToDoList:
         answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
         i += 1
       self.__re_Order_Task_Number()
-
-    # to run on delete and after rotp
+    #
+    # function to run on delete and after rotp
+    #
     def __re_Order_Task_Number(self):
       i = int(1)
       for x in self.todos:
         x.taskNumber = i
         i+=1
-
-
+#
+# function to output a menu for the user
+#
 def menu():
     return input("Would you like to:"
                 "\nAdd Tasks ---------------> [A]"
@@ -114,14 +131,17 @@ def menu():
                 "\nEdit tasks --------------> [E]"
                 "\nDelete Tasks ------------> [D]"
                 "\nQuit --------------------> [Q]").lower()
-
-
+#
+# function to create a new todolist
+#
 def createToDoList():
   fileName = input("What would you like to call this todo list? ")
   todoList = ToDoList(fileName)
   todoList.addTasks()
   return todoList
-
+#
+# function to load a todo list
+#
 def loadToDoList():
   fileName = input("What is the name of the ToDo list you would like to load? ")
   todoList = ToDoList(fileName)
@@ -129,10 +149,10 @@ def loadToDoList():
   return todoList
 
 
-
+#
+# UI:
+#
 createLoadAnswer = input("Create or Load a ToDo list: [C/L]").lower()
-
-
 
 if createLoadAnswer == "c":
   todoList = createToDoList()
