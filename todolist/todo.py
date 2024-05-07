@@ -50,16 +50,16 @@ class ToDoList:
     #
     def loadTasks(self):
       if len(os.listdir(f'{self.directory}/')) == 0:
-        print("No Fils exist")
-        return
-      fileName = ""
-      while not self.checkToDoExists(fileName):
-        fileName = str(input("What is the name of the todolist that you would like to load? "))
-      file = open(f'{self.directory}/{fileName}.csv')
-      data = file.readlines()
-      for x in data:
-        stringAsList = x.split(',')
-        self.todos.append(copy.copy(ToDo(stringAsList[0], stringAsList[1], stringAsList[2], stringAsList[3])))
+        print("No Files exist")
+      else:
+        fileName = ""
+        while not self.checkToDoExists(fileName):
+          fileName = str(input("What is the name of the todolist that you would like to load? "))
+        file = open(f'{self.directory}/{fileName}.csv')
+        data = file.readlines()
+        for x in data:
+          stringAsList = x.split(',')
+          self.todos.append(copy.copy(ToDo(stringAsList[0], stringAsList[1], stringAsList[2], stringAsList[3])))
 
     #
     # function to read out the todo list
@@ -76,7 +76,7 @@ class ToDoList:
             print("Nothing to save")
         else:
             print("Saving tasks")
-            f = open("%s.csv" %self.saveFile, 'r+')
+            f = open(f'{self.directory}/{self.saveFile}', 'r+')
             data = f.readlines()
             i = int(0)
             for x in self.todos:
@@ -93,24 +93,24 @@ class ToDoList:
     def deleteTasks(self):
       if not self.todos:
         print("ToDoList is empty")
-        return
-      taskToDelete = int(input("Enter the number of the task you would like to delete: "))
-      if taskToDelete < 0 or taskToDelete > len(self.todos):
-        while taskToDelete < 0 or taskToDelete >= len(self.todos):
-          taskToDelete = int(input("Enter a valid task to delete: "))
-        self.todos.pop(taskToDelete-1)
-        self.__re_Order_Task_Number()
+      else:
+        taskToDelete = int(input("Enter the number of the task you would like to delete: "))
+        if taskToDelete < 0 or taskToDelete > len(self.todos):
+          while taskToDelete < 0 or taskToDelete >= len(self.todos):
+            taskToDelete = int(input("Enter a valid task to delete: "))
+          self.todos.pop(taskToDelete-1)
+          self.__re_Order_Task_Number()
     #
     # function to edit tasks in the todo list
     #
     def editTasks(self):
       if not self.todos:
         print("ToDoList is empty")
-        return
-      taskToEdit = int(input("Enter the number of the task you would like to edit: "))
-      if taskToEdit < 0 or taskToEdit > len(self.todos)
-        while taskToEdit < 0 or taskToEdit > len(self.todos):
-          taskToDelete = int(input("Enter a valid task to edit: "))
+      else:
+        taskToEdit = int(input("Enter the number of the task you would like to edit: "))
+        if taskToEdit < 0 or taskToEdit > len(self.todos):
+          while taskToEdit < 0 or taskToEdit > len(self.todos):
+            taskToDelete = int(input("Enter a valid task to edit: "))
     #
     # function to add tasks to the todo list
     #
@@ -175,7 +175,7 @@ createLoadAnswer = input("Create or Load a ToDo list: [C/L]").lower()
 
 if createLoadAnswer == "c":
   todoList = createToDoList()
-else
+else:
   todoList = loadToDoList()
 choice = menu()
 while choice != "q":
@@ -183,7 +183,7 @@ while choice != "q":
     case "a":
       todoList.addTasks()
     case "r":
-      todoList.addTasks()
+      todoList.readTasks()
     case "s":
       todoList.saveTasks()
     case "e":
