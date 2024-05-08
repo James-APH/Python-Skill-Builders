@@ -31,14 +31,19 @@ class ToDo:
     self.time = time
     self.priority = priority
 
+  def asString(self):
+    return f'{self.taskNumber},{self.task},{self.priority},{self.time},{self.todaysDate}'
+
 class ToDoList:
     #
     # constructor for todolist
     #
     def __init__(self, saveFile) -> None:
-        self.directory = "todos"
-        self.todos = []
-        self.saveFile = ""
+      self.saveFile = saveFile
+      self.directory = "todos"
+      self.path = f'{self.directory}/{self.saveFile}.csv'
+      self.todos = []
+
     #
     # function to check if a file exists
     #
@@ -55,7 +60,7 @@ class ToDoList:
         fileName = ""
         while not self.checkToDoExists(fileName):
           fileName = str(input("What is the name of the todolist that you would like to load? "))
-        file = open(f'{self.directory}/{fileName}.csv')
+        file = open(self.path)
         data = file.readlines()
         for x in data:
           stringAsList = x.split(',')
@@ -72,21 +77,30 @@ class ToDoList:
     # function to save tasks in the todo list
     #
     def saveTasks(self):
-        if not self.todos:
-            print("Nothing to save")
+      # checking to see if file has been created - if not the
+      # file is created
+      if not self.checkToDoExists(self.saveFile):
+        open(self.path, 'w').close()
+
+      # checking if the todolist has todos in it
+      if not self.todos:
+        print("Nothing to save")
+      else:
+        f = open(self.path, 'r+')
+        data = []
+        if os.stat(self.path).st_size == 0:
+          for x in self.todos:
+            str = x.asString()
+            data.append(str)
         else:
-            print("Saving tasks")
-            f = open(f'{self.directory}/{self.saveFile}', 'r+')
-            data = f.readlines()
-            i = int(0)
-            for x in self.todos:
-              str = f'{x.taskNumber},{x.task},{x.priority},{x.time},{x.todaysDate}'
-              if str == data[i]:
-                continue
-              data[i] = str
-              i += 1
-            f.writelines(data)
-            f.close()
+          data = f.readlines()
+          for x in self.todos:
+            str = x.asString()
+            if str in data:
+              continue
+              data.append(str)
+        f.writelines(data)
+        f.close()
     #
     # function to delete tasks from the todo list
     #
