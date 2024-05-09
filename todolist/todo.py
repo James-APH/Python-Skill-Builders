@@ -17,55 +17,84 @@
 
 
 from datetime import date
+from enum import Enum
 import copy
 import os
 # create a todo list with a list and a tuple
 # print the rules
 # on quit ask the user if they would like to save their todolist
 
+
+
+class File_States(Enum):
+    NONEXISTENT_FILE = 1
+    EMPTY_DIRECTORY = 2
+    VALID = 3
+
+def file_guard(directory,file):
+  file_state = File_States
+  if len(os.listdir(f'{directory}/')) == 0:
+    return file_state.EMPTY_DIRECTORY
+  elif not os.path.isfile(f'{directory}/{file}.csv'):
+    return file_state.NONEXISTENT_FILE
+  else:
+    return file_state.VALID
+
+def get_file(directory):
+  file = ""
+  while not file_guard(directory, file) != 3:
+    os.listdir(f'{directory}/')
+    file = str(input("Enter the name of the list you would like to load? "))
+  return file
+
 class ToDo:
-  def __init__(self, taskNumber, task, time, priority) -> None:
-    self.taskNumber = taskNumber
-    self.todaysDate = date.today()
+  def __init__(self, number : int, task : str, time : str, priority : int, date : date) -> None:
+    self.number = number
+    self.date = date
     self.task = task
     self.time = time
     self.priority = priority
 
-  def asString(self):
-    return f'{self.taskNumber},{self.task},{self.priority},{self.time},{self.todaysDate}'
+  def to_string(self):
+    return f'{self.number},{self.task},{self.priority},{self.time},{self.date}'
+
+  @classmethod
+  def from_string(cls, string):
+    string_partition = string.split(',')
+    number, task, priority, time, date = string_partition
+    return cls(number, task, priority, time, date)
 
 class ToDoList:
     #
     # constructor for todolist
     #
-    def __init__(self, saveFile) -> None:
-      self.saveFile = saveFile
-      self.directory = "todos"
-      self.path = f'{self.directory}/{self.saveFile}.csv'
+    def __init__(self, save_file : str, directory : str) -> None:
+      self.save_file = save_file
+      self.directory = directory
+      self.path = f'{self.directory}/{self.save_file}.csv'
       self.todos = []
 
-    #
-    # function to check if a file exists
-    #
-    def checkToDoExists(self, fileName):
-      path = f'todos/{fileName}.csv'
-      return os.path.isfile(path)
-    #
-    # function to load tasks from a file
-    #
-    def loadTasks(self):
-      if len(os.listdir(f'{self.directory}/')) == 0:
-        print("No Files exist")
-      else:
-        fileName = ""
+    #############################
+    # functions to check files: #
+    #############################
+
+
+
+    ###########################
+    # Functions related to UI #
+    ###########################
+    def loadTasks(self, fileName):
+      if self.__checkFileStatus():
+      fileName = self.__getFileNameFromUser()
         while not self.checkToDoExists(fileName):
-          fileName = str(input("What is the name of the todolist that you would like to load? "))
+          fileName = str(input("What is the name of the list you would like to load? "))
         file = open(self.path)
         data = file.readlines()
         for x in data:
           stringAsList = x.split(',')
           self.todos.append(copy.copy(ToDo(stringAsList[0], stringAsList[1], stringAsList[2], stringAsList[3])))
-
+      else:
+        print("No files to load")
     #
     # function to read out the todo list
     #
@@ -77,18 +106,18 @@ class ToDoList:
     # function to save tasks in the todo list
     #
     def saveTasks(self):
+      open(self.path, 'w').close()
       # checking to see if file has been created - if not the
       # file is created
-      if not self.checkToDoExists(self.saveFile):
-        open(self.path, 'w').close()
-
+      # if not self.checkToDoExists(self.saveFile):
       # checking if the todolist has todos in it
       if not self.todos:
         print("Nothing to save")
       else:
         f = open(self.path, 'r+')
         data = []
-        if os.stat(self.path).st_size == 0:
+        #empty = os.stat(self.path).st_size == 0
+        if not self.__checkFileStatus():
           for x in self.todos:
             str = x.asString()
             data.append(str)
@@ -153,7 +182,8 @@ class ToDoList:
       for x in self.todos:
         x.taskNumber = i
         i+=1
-#
+
+   #
 # function to output a menu for the user
 #
 def menu():
@@ -176,7 +206,7 @@ def createToDoList():
 # function to load a todo list
 #
 def loadToDoList():
-  fileName = input("What is the name of the ToDo list you would like to load? ")
+  fileName = input("What is the name of the list you would like to load? ")
   todoList = ToDoList(fileName)
   todoList.loadTasks()
   return todoList
