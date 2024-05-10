@@ -4,66 +4,76 @@
 #
 #
 
-# Tasks:
-# write a todo list in a list of tuples
-# create a file
-# read a file (must make sure file exists)
-# write a file ()
-# remove items
-# add items
-# change priority
-# add extension to todos
-# add stages (todo, doing, done)
-
-
 from datetime import date
 from enum import Enum
 import copy
 import os
-# create a todo list with a list and a tuple
-# print the rules
-# on quit ask the user if they would like to save their todolist
 
-
-
-class File_States(Enum):
+#
+# Enum to manage various file states
+#
+class File_State(Enum):
     NONEXISTENT_FILE = 1
     EMPTY_DIRECTORY = 2
-    VALID = 3
-
+    EMPTY_FILE = 3
+    VALID = 4
+#
+# function to check if a file is in the correct form
+#
 def file_guard(directory,file):
-  file_state = File_States
+  file_state = File_State
   if len(os.listdir(f'{directory}/')) == 0:
     return file_state.EMPTY_DIRECTORY
   elif not os.path.isfile(f'{directory}/{file}.csv'):
     return file_state.NONEXISTENT_FILE
+  elif os.stat(f'{directory}/{file}.csv').st_size == 0:
+    return file_state.EMPTY_FILE
   else:
     return file_state.VALID
-
+#
+# function to get a file from a directory
+#
 def get_file(directory):
+  file_state = File_State
   file = ""
-  while not file_guard(directory, file) != 3:
+  while file_guard(directory, file) == file_state.NONEXISTENT_FILE:
     os.listdir(f'{directory}/')
-    file = str(input("Enter the name of the list you would like to load? "))
+    file = str(input("Enter the name of the list you would like to access? "))
   return file
 
+#
+# class for todo
+#
 class ToDo:
+  #
+  # constructor for todo
+  #
   def __init__(self, number : int, task : str, time : str, priority : int, date : date) -> None:
-    self.number = number
     self.date = date
     self.task = task
     self.time = time
+    self.number = number
     self.priority = priority
 
+  #
+  # convert a todo to a string (for csv file)
+  #
   def to_string(self):
     return f'{self.number},{self.task},{self.priority},{self.time},{self.date}'
 
+  #
+  # declare a todo from a string (from csv file)
+  #
   @classmethod
   def from_string(cls, string):
     string_partition = string.split(',')
     number, task, priority, time, date = string_partition
     return cls(number, task, priority, time, date)
 
+
+#
+# class for todolist
+#
 class ToDoList:
     #
     # constructor for todolist
@@ -73,80 +83,61 @@ class ToDoList:
       self.directory = directory
       self.path = f'{self.directory}/{self.save_file}.csv'
       self.todos = []
-
-    #############################
-    # functions to check files: #
-    #############################
-
-
-
-    ###########################
-    # Functions related to UI #
-    ###########################
-    def loadTasks(self, fileName):
-      if self.__checkFileStatus():
-      fileName = self.__getFileNameFromUser()
-        while not self.checkToDoExists(fileName):
-          fileName = str(input("What is the name of the list you would like to load? "))
+    #
+    # function to load tasks from a file
+    #
+    def load_tasks(self):
+      file_state = File_State
+      if file_guard(self.directory, "") == file_state.EMPTY_DIRECTORY:
+        print("NO FILES TO LOAD")
+        self.todos = []
+      else:
+        file = get_file(self.directory)
         file = open(self.path)
         data = file.readlines()
         for x in data:
-          stringAsList = x.split(',')
-          self.todos.append(copy.copy(ToDo(stringAsList[0], stringAsList[1], stringAsList[2], stringAsList[3])))
-      else:
-        print("No files to load")
+          self.todos.append(copy.copy(ToDo.from_string(x)))
     #
     # function to read out the todo list
     #
-    def readTasks(self):
+    def read_tasks(self):
       for x in self.todos:
         print("#:                 Task:      Priority:      Time To Complete:     Date Started:")
         print(f"{x.taskNumber}. | {x.task} | {x.priority} | {x.time} | {x.todaysDate}")
     #
     # function to save tasks in the todo list
     #
-    def saveTasks(self):
+    def save_tasks(self):
       open(self.path, 'w').close()
-      # checking to see if file has been created - if not the
-      # file is created
-      # if not self.checkToDoExists(self.saveFile):
-      # checking if the todolist has todos in it
       if not self.todos:
-        print("Nothing to save")
+        print("saved")
       else:
-        f = open(self.path, 'r+')
-        data = []
-        #empty = os.stat(self.path).st_size == 0
-        if not self.__checkFileStatus():
-          for x in self.todos:
-            str = x.asString()
-            data.append(str)
-        else:
-          data = f.readlines()
-          for x in self.todos:
-            str = x.asString()
-            if str in data:
-              continue
-              data.append(str)
-        f.writelines(data)
-        f.close()
+        file = open(self.path, 'r+')
+        data = file.readlines()
+        emptyfile = file_guard(self.directory,self.save_file) == 3
+        for todo in self.todos:
+          if not emptyfile and todo.asString() in data:
+            continue
+          data.append(todo.asString())
+        file.writelines(data)
+        file.close()
     #
     # function to delete tasks from the todo list
     #
-    def deleteTasks(self):
+    def delete_tasks(self):
       if not self.todos:
         print("ToDoList is empty")
       else:
         taskToDelete = int(input("Enter the number of the task you would like to delete: "))
-        if taskToDelete < 0 or taskToDelete > len(self.todos):
+        if taskToDelete < 0 or taskToDelete >= len(self.todos):
           while taskToDelete < 0 or taskToDelete >= len(self.todos):
             taskToDelete = int(input("Enter a valid task to delete: "))
-          self.todos.pop(taskToDelete-1)
-          self.__re_Order_Task_Number()
+          self.todos.pop(taskToDelete - 1)
+          self.__re_order_task_number()
     #
     # function to edit tasks in the todo list
     #
-    def editTasks(self):
+    def edit_tasks(self):
       if not self.todos:
         print("ToDoList is empty")
       else:
@@ -157,27 +148,28 @@ class ToDoList:
     #
     # function to add tasks to the todo list
     #
-    def addTasks(self):
+    def add_tasks(self):
       i = 1
       answer = input("Would you like to add some tasks? [Y/N]").lower()
       while answer != "n":
-        taskNumber = i
+        number = i
         task = input("What is the task: ").lower()
-        todaysDate = date.today()
+        _date = date.today()
         time = input("How long should this take you? ")
-        priority = input("How Important is this task?"
+        priority = int(input("How Important is this task?"
                               "\nNice To Have --> [1]"
                               "\nImportant -----> [2]"
-                              "\nCrucial -------> [3]")
-        todo = ToDo(taskNumber, task, time, priority)
+                              "\nCrucial -------> [3]"))
+
+        todo = ToDo(number, task, time, priority, _date)
         self.todos.append(copy.copy(todo))
         answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
         i += 1
-      self.__re_Order_Task_Number()
+      self.__re_order_task_number()
     #
     # function to run on delete and after rotp
     #
-    def __re_Order_Task_Number(self):
+    def __re_order_task_number(self):
       i = int(1)
       for x in self.todos:
         x.taskNumber = i
@@ -197,7 +189,7 @@ def menu():
 #
 # function to create a new todolist
 #
-def createToDoList():
+def create_to_do_list():
   fileName = input("What would you like to call this todo list? ")
   todoList = ToDoList(fileName)
   todoList.addTasks()
@@ -205,7 +197,7 @@ def createToDoList():
 #
 # function to load a todo list
 #
-def loadToDoList():
+def load_to_do_list():
   fileName = input("What is the name of the list you would like to load? ")
   todoList = ToDoList(fileName)
   todoList.loadTasks()
