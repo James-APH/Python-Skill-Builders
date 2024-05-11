@@ -9,7 +9,6 @@ from enum import Enum
 import copy
 import os
 
-
 #
 # Enum to manage various file states
 #
@@ -113,10 +112,7 @@ class ToDoList:
     def read_tasks(self):
         for x in self.todos:
             print(
-                "#:                 Task:      Priority:      Time To Complete:     Date Started:"
-            )
-            print(
-                f"{x.taskNumber}. | {x.task} | {x.priority} | {x.time} | {x.todaysDate}"
+                f"NUMBER: {x.taskNumber}\nTASK: {x.task}\nPRIORITY: {x.priority}\nTIME: {x.time}\nDATE: {x.date}\n"
             )
 
     #
@@ -125,17 +121,20 @@ class ToDoList:
     def save_tasks(self):
         open(self.path, "w").close()
         if not self.todos:
-            print("saved")
+            print("Saved!")
         else:
             file = open(self.path, "r+")
+
             data = file.readlines()
             emptyfile = file_guard(self.directory, self.save_file) == 3
             for todo in self.todos:
-                if not emptyfile and todo.asString() in data:
+                if not emptyfile and todo.to_string() in data:
                     continue
-                data.append(todo.asString())
-            file.writelines(data)
+                data.append(f'{todo.to_string()}\n')
+            for string in data:
+                file.write(string)
             file.close()
+            print("Saved!")
 
     #
     # function to delete tasks from the todo list
@@ -158,22 +157,47 @@ class ToDoList:
     #
     def edit_tasks(self):
         if not self.todos:
-          print("ToDoList is empty")
+            print("ToDoList is empty")
         else:
-            taskToEdit = int(
+            task_number = int(
                 input("Enter the number of the task you would like to edit: ")
             )
-            if taskToEdit < 0 or taskToEdit > len(self.todos):
-                while taskToEdit < 0 or taskToEdit > len(self.todos):
-                    taskToDelete = int(input("Enter a valid task to edit: "))
-
+            if task_number < 0 or task_number > len(self.todos):
+                while task_number < 0 or task_number > len(self.todos):
+                    task_number = int(input("Enter a valid task to edit: "))
+            editing = "y"
+            while editing == "y":
+                edit = str(
+                    input(
+                        "What would you like to edit?"
+                        "\ntask description --> [D]"
+                        "\ntask priority -----> [P]"
+                        "\ntask time ---------> [T]\n"
+                    ).lower()
+                )
+                match edit:
+                    case "d":
+                        self.todos[task_number - 1].task = str(
+                            input("Enter the new description: ")
+                        )
+                    case "p":
+                        self.todos[task_number - 1].priority = int(
+                            input("Enter the new priority: ")
+                        )
+                    case "t":
+                        self.todos[task_number - 1].time = str(
+                            input("Enter the new time: ")
+                        )
+                editing = str(
+                    input("Would you like to keep editing this task? [Y/N] ").lower()
+                )
 
     #
     # function to add tasks to the todo list
     #
     def add_tasks(self):
         i = 1
-        answer = input("Would you like to add some tasks? [Y/N]").lower()
+        answer = input("Would you like to add some tasks? [Y/N] ").lower()
         while answer != "n":
             number = i
             task = input("What is the task: ").lower()
@@ -184,18 +208,19 @@ class ToDoList:
                     "How Important is this task?"
                     "\nNice To Have --> [1]"
                     "\nImportant -----> [2]"
-                    "\nCrucial -------> [3]"
+                    "\nCrucial -------> [3]\n"
                 )
             )
 
             todo = ToDo(number, task, time, priority, _date)
             self.todos.append(copy.copy(todo))
-            answer = input("Would you like to contiue adding add tasks [Y/N]").lower()
+            answer = input("Would you like to contiue adding add tasks [Y/N] ").lower()
             i += 1
         self.__re_order_task_number()
 
+
     #
-    # function to run on delete and after rotp
+    # function to run after deleteing an element
     #
     def __re_order_task_number(self):
         i = int(1)
@@ -215,7 +240,7 @@ def menu():
         "\nSave Tasks --------------> [S]"
         "\nEdit tasks --------------> [E]"
         "\nDelete Tasks ------------> [D]"
-        "\nQuit --------------------> [Q]"
+        "\nQuit --------------------> [Q]\n"
     ).lower()
 
 
@@ -242,7 +267,7 @@ def load_to_do_list():
 #
 # UI:
 #
-answer = input("Create or Load a ToDo list: [C/L]").lower()
+answer = input("Create or Load a ToDo list: [C/L] ").lower()
 
 if answer == "c":
     todoList = create_to_do_list()
