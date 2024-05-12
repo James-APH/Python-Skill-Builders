@@ -112,7 +112,7 @@ class ToDoList:
     def read_tasks(self):
         for x in self.todos:
             print(
-                f"NUMBER: {x.taskNumber}\nTASK: {x.task}\nPRIORITY: {x.priority}\nTIME: {x.time}\nDATE: {x.date}\n"
+                f"NUMBER: {x.number}\nTASK: {x.task}\nPRIORITY: {x.priority}\nTIME: {x.time}\nDATE: {x.date}\n"
             )
 
     #
@@ -233,7 +233,7 @@ class ToDoList:
 # function to output a menu for the user
 #
 def menu():
-    return input(
+    return str(input(
         "Would you like to:"
         "\nAdd Tasks ---------------> [A]"
         "\nRead Tasks --------------> [R]"
@@ -241,7 +241,8 @@ def menu():
         "\nEdit tasks --------------> [E]"
         "\nDelete Tasks ------------> [D]"
         "\nQuit --------------------> [Q]\n"
-    ).lower()
+        "\n"
+    )).lower()
 
 
 #
@@ -258,12 +259,9 @@ def create_to_do_list():
 # function to load a todo list
 #
 def load_to_do_list():
-    fileName = input("What is the name of the list you would like to load? ")
-    todoList = ToDoList(fileName, "todos")
+    todoList = ToDoList("", "todos")
     todoList.load_tasks()
     return todoList
-
-
 #
 # UI:
 #
