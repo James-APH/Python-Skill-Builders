@@ -8,8 +8,8 @@ The purpose of the projects in this repo are to
 teach me from the fundamentals up to advanced topics
 in the python programming language.
 
-For some of the projects I will be following a tutorial
-I will tag the projecy
+
+
 
 
 ## Project List:
@@ -20,14 +20,38 @@ I will tag the projecy
 
 - To-Do List
 
-- Number Gussing Game
+- Text-Based-Adventure
 
-- Currency Converter
+- Download Manager
 
-- Chatbot
+- Vector / Matrix / Set / Logic Calculator
 
-- Word Counter
+- ToDo List CLI
 
-- Alarm Clock
+- Chat Bot
 
-- BMI Calculator
+- Paint Clone
+
+- File Encryption
+
+- Web Server
+
+- Snake
+
+- Tetris
+
+---
+
+### Hello World:
+
+#### Project Description:
+Outputs Hello World
+
+
+### Calculator:
+
+#### Project Description
+Does basic math operations --> + * / -
+
+
+
