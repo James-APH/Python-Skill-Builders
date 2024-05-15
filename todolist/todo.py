@@ -41,7 +41,7 @@ def get_file(directory):
     file_state = File_State
     file = ""
     while file_guard(directory, file) == file_state.NONEXISTENT_FILE:
-        os.listdir(f"{directory}/")
+        print(os.listdir(f"{directory}/"))
         file = str(input("Enter the name of the list you would like to access?\n"))
     return file
 
@@ -85,10 +85,10 @@ class ToDoList:
     #
     # constructor for todolist
     #
-    def __init__(self, save_file: str, directory: str) -> None:
-        self.save_file = save_file
+    def __init__(self, file: str, directory: str) -> None:
+        self.file = file
         self.directory = directory
-        self.path = f"{self.directory}/{self.save_file}.csv"
+        self.path = f"{self.directory}/{self.file}.csv"
         self.todos = []
 
     #
@@ -100,9 +100,10 @@ class ToDoList:
             print("NO FILES TO LOAD")
             self.todos = []
         else:
-            file = get_file(self.directory)
-            file = open(self.path)
-            data = file.readlines()
+            self.file = get_file(self.directory)
+            self.path = f"{self.directory}/{self.file}.csv"
+            file_reader = open(self.path)
+            data = file_reader.readlines()
             for x in data:
                 self.todos.append(copy.copy(ToDo.from_string(x)))
 
@@ -123,10 +124,10 @@ class ToDoList:
         if not self.todos:
             print("Saved!")
         else:
-            fileWriter = open(self.path, "w")
+            file_writer = open(self.path, "w")
             for todo in self.todos:
-                fileWriter.write(f'{todo.to_string()}\n')
-            fileWriter.close()
+                file_writer.write(f'{todo.to_string()}\n')
+            file_writer.close()
             print("Saved!")
     #
     # function to delete tasks from the todo list
@@ -135,14 +136,15 @@ class ToDoList:
         if not self.todos:
             print("ToDoList is empty")
         else:
-            taskToDelete = int(
+            task_to_delete = int(
                 input("Enter the number of the task you would like to delete:\n")
-            )
-            if taskToDelete < 0 or taskToDelete >= len(self.todos):
-                while taskToDelete < 0 or taskToDelete >= len(self.todos):
-                    taskToDelete = int(input("Enter a valid task to delete:\n"))
-                self.todos.pop(taskToDelete - 1)
-                self.__re_order_task_number()
+            )-1
+            if task_to_delete < 0 or task_to_delete >= len(self.todos):
+                while task_to_delete < 0 or task_to_delete >= len(self.todos):
+                    task_to_delete = int(input("Enter a valid task to delete:\n"))-1
+            del self.todos[task_to_delete]
+            self.__re_order_task_number()
+
 
     #
     # function to edit tasks in the todo list
@@ -220,7 +222,7 @@ class ToDoList:
     def __re_order_task_number(self):
         i = int(1)
         for x in self.todos:
-            x.taskNumber = i
+            x.number = i
             i += 1
 
 
