@@ -9,6 +9,7 @@ from enum import Enum
 import copy
 import os
 
+
 #
 # Enum to manage various file states
 #
@@ -126,9 +127,10 @@ class ToDoList:
         else:
             file_writer = open(self.path, "w")
             for todo in self.todos:
-                file_writer.write(f'{todo.to_string()}\n')
+                file_writer.write(f"{todo.to_string()}\n")
             file_writer.close()
             print("Saved!")
+
     #
     # function to delete tasks from the todo list
     #
@@ -136,15 +138,15 @@ class ToDoList:
         if not self.todos:
             print("ToDoList is empty")
         else:
-            task_to_delete = int(
-                input("Enter the number of the task you would like to delete:\n")
-            )-1
+            task_to_delete = (
+                int(input("Enter the number of the task you would like to delete:\n"))
+                - 1
+            )
             if task_to_delete < 0 or task_to_delete >= len(self.todos):
                 while task_to_delete < 0 or task_to_delete >= len(self.todos):
-                    task_to_delete = int(input("Enter a valid task to delete:\n"))-1
+                    task_to_delete = int(input("Enter a valid task to delete:\n")) - 1
             del self.todos[task_to_delete]
             self.__re_order_task_number()
-
 
     #
     # function to edit tasks in the todo list
@@ -193,7 +195,7 @@ class ToDoList:
         if not self.todos:
             i = 1
         else:
-            i = self.todos[len(self.todos)-1].number+1
+            i = self.todos[len(self.todos) - 1].number + 1
         answer = input("Would you like to add some tasks? [Y/N]\n").lower()
         while answer != "n":
             number = i
@@ -211,10 +213,11 @@ class ToDoList:
 
             todo = ToDo(number, task, time, priority, _date)
             self.todos.append(copy.copy(todo))
-            answer = input("Would you like to continue adding add tasks [Y/N]\n").lower()
+            answer = input(
+                "Would you like to continue adding add tasks [Y/N]\n"
+            ).lower()
             i += 1
         self.__re_order_task_number()
-
 
     #
     # function to run after deleteing an element
@@ -230,16 +233,18 @@ class ToDoList:
 # function to output a menu for the user
 #
 def menu():
-    return str(input(
-        "Would you like to:"
-        "\nAdd Tasks ---------------> [A]"
-        "\nRead Tasks --------------> [R]"
-        "\nSave Tasks --------------> [S]"
-        "\nEdit tasks --------------> [E]"
-        "\nDelete Tasks ------------> [D]"
-        "\nQuit --------------------> [Q]\n"
-        "\n"
-    )).lower()
+    return str(
+        input(
+            "Would you like to:"
+            "\nAdd Tasks ---------------> [A]"
+            "\nRead Tasks --------------> [R]"
+            "\nSave Tasks --------------> [S]"
+            "\nEdit tasks --------------> [E]"
+            "\nDelete Tasks ------------> [D]"
+            "\nQuit --------------------> [Q]\n"
+            "\n"
+        )
+    ).lower()
 
 
 #
@@ -259,6 +264,8 @@ def load_to_do_list():
     todoList = ToDoList("", "todos")
     todoList.load_tasks()
     return todoList
+
+
 #
 # UI:
 #
