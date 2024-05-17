@@ -1,57 +1,54 @@
 # Beginner Projects
 
 Author: James Huston
-Email:  jamzhuston@gmail.com
+Email: jamzhuston@gmail.com
 
 ## Description:
+
 The purpose of the projects in this repo are to
 teach me from the fundamentals up to advanced topics
 in the python programming language.
 
-
-
-
-
 ## Project List:
 
-- Hello World
+-   Hello World
 
-- Calculator
+-   Calculator
 
-- To-Do List
+-   To-Do List
 
-- Text-Based-Adventure
+-   Text-Based-Adventure
 
-- Download Manager
+-   Download Manager
 
-- Vector / Matrix / Set / Logic Calculator
+-   Vector / Matrix / Set / Logic Calculator
 
-- ToDo List CLI
+-   ToDo List CLI
 
-- Chat Bot
+-   Chat Bot
 
-- Paint Clone
+-   Paint Clone
 
-- File Encryption
+-   File Encryption
 
-- Web Server
+-   Web Server
 
-- Snake
+-   Snake
 
-- Tetris
+-   Tetris
 
 ---
 
 ### Hello World:
 
 #### Project Description:
-Outputs Hello World
 
+Outputs Hello World
 
 ### Calculator:
 
 #### Project Description
-Does basic math operations --> + * / -
 
+Does basic math operations --> + \* / -
 
-
+### ToDo List:
